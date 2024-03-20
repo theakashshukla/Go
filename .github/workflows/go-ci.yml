@@ -1,0 +1,27 @@
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Go cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ runner.os }}-go
+          key: ${{ runner.os }}-go-${{ hashFiles('/go/go.mod') }}  
+          restore-keys: |
+            ${{ runner.os }}-go-
+      - name: Setup Go environment
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19  # Adjust Go version if needed
+      - name: Change directory to Go app
+        run:  cd         # I want current directory
+      - name: Run Go tooling (build, test, lint)
+        run: |
+          make build  # Adjust build command if needed
+          make test  # Adjust test command if needed
+          make lint  # Add a target to run GolangCI-Lint (example)
